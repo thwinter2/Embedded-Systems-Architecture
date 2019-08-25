@@ -25,7 +25,7 @@ typedef struct {	// Entry to translate from touch value range to color
 } TOUCH_RGB_ENTRY;
 
 TOUCH_RGB_ENTRY RGB_Table[] = { // Table of translation entries
-	{65,0,0,0}, // first recognized touch range
+	{80,0,0,0}, // first recognized touch range
 	{300,0,0,1},
 	{500,0,1,1},
 	{700,0,1,0},
