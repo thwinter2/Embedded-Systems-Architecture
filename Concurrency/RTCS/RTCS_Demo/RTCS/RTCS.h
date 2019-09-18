@@ -10,19 +10,21 @@ extern volatile uint32_t RTCS_Num_Ticks;
 
 typedef struct {
 	void (*Task)(void);
-	uint16_t Period;
-	uint16_t TicksToNextRelease;
-	char RunRequestsPending;
+	uint32_t Period;
+	uint32_t TicksToNextRelease;
+	uint32_t ReleasesPending;
 	char Enabled;
 } RTCS_TASK_ENTRY;
 
 extern volatile RTCS_TASK_ENTRY RTCS_Task_Table[RTCS_NUM_TASKS];
 
-int RTCS_Add_Task(void (*task)(void), uint8_t priority, uint16_t period);
+int RTCS_Add_Task(void (*task)(void), uint32_t priority, uint32_t period);
 void RTCS_Run_Scheduler(void);
 void RTCS_Init(uint32_t freq);
 void RTCS_Timer_Tick(void);
-void RTCS_Enable_Task(void (*task)(void), uint32_t enable);
+int RTCS_Enable_Task(uint32_t i, uint32_t enable);
+int RTCS_Find_Task_Priority(void (*task)(void));
+int RTCS_Release_Task(uint32_t i);
 
 
 #endif // RTCS_H
