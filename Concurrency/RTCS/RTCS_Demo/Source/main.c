@@ -94,9 +94,7 @@ int main (void) {
 	RTCS_Add_Task(Task_G, 1, 49);
 	RTCS_Add_Task(Task_B, 2, 48);
 
-	__enable_irq();
 	RTCS_Run_Scheduler();  // This call never returns
-
 }
 
 // *******************************ARM University Program Copyright © ARM Ltd 2013*************************************   
