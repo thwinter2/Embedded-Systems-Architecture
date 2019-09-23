@@ -45,6 +45,8 @@ void Init_Debug_Signals(void) {
 	SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
 	
 	// Make pins GPIO
+	PORTB->PCR[DBG_0] &= ~PORT_PCR_MUX_MASK;          
+	PORTB->PCR[DBG_0] |= PORT_PCR_MUX(1);          
 	PORTB->PCR[DBG_1] &= ~PORT_PCR_MUX_MASK;          
 	PORTB->PCR[DBG_1] |= PORT_PCR_MUX(1);          
 	PORTB->PCR[DBG_2] &= ~PORT_PCR_MUX_MASK;          
@@ -62,10 +64,10 @@ void Init_Debug_Signals(void) {
 
 	
 	// Set ports to outputs
-	PTB->PDDR |= MASK(DBG_1) | MASK(DBG_2) | MASK(DBG_3) | MASK(DBG_4) | MASK(DBG_5) | MASK(DBG_6) | MASK(DBG_7);
+	PTB->PDDR |= MASK(DBG_0) | MASK(DBG_1) | MASK(DBG_2) | MASK(DBG_3) | MASK(DBG_4) | MASK(DBG_5) | MASK(DBG_6) | MASK(DBG_7);
 	
 	// Initial values are 0
-	PTB->PCOR = MASK(DBG_1) | MASK(DBG_2) | MASK(DBG_3) | MASK(DBG_4) | MASK(DBG_5) | MASK(DBG_6) | MASK(DBG_7);
+	PTB->PCOR = MASK(DBG_0) | MASK(DBG_1) | MASK(DBG_2) | MASK(DBG_3) | MASK(DBG_4) | MASK(DBG_5) | MASK(DBG_6) | MASK(DBG_7);
 }	
 	
 void Init_Interrupts(void) {
@@ -135,21 +137,21 @@ void PORTD_IRQHandler(void) {
 	if ((PORTD->ISFR & MASK(SW1_POS))) {	
 		if (SWITCH_PRESSED(SW1_POS)) { // flash white
 			RTCS_Enable_Task(Task_Flash_FSM, 1);
-			RTCS_Request_Task_Run(Task_Flash_FSM);
+			RTCS_Release_Task(Task_Flash_FSM);
 			RTCS_Enable_Task(Task_RGB_FSM, 0);
 		} else {
 			RTCS_Enable_Task(Task_Flash_FSM, 0);
 			RTCS_Enable_Task(Task_RGB_FSM, 1);
-			RTCS_Request_Task_Run(Task_RGB_FSM);
+			RTCS_Release_Task(Task_RGB_FSM);
 		}
 	}
 	if ((PORTD->ISFR & MASK(SW2_POS))) {	
 		if (SWITCH_PRESSED(SW2_POS)) {
-			RTCS_Set_Task_Period(Task_Flash_FSM, W_DELAY_FAST);
-			RTCS_Set_Task_Period(Task_RGB_FSM, RGB_DELAY_FAST);
+			RTCS_Set_Task_Period(Task_Flash_FSM, W_DELAY_FAST, 0);
+			RTCS_Set_Task_Period(Task_RGB_FSM, RGB_DELAY_FAST, 0);
 		}	else {
-			RTCS_Set_Task_Period(Task_Flash_FSM, W_DELAY_SLOW);
-			RTCS_Set_Task_Period(Task_RGB_FSM, RGB_DELAY_SLOW);
+			RTCS_Set_Task_Period(Task_Flash_FSM, W_DELAY_SLOW, 0);
+			RTCS_Set_Task_Period(Task_RGB_FSM, RGB_DELAY_SLOW, 0);
 		}
 	}
 	// clear status flags 
