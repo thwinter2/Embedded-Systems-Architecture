@@ -18,7 +18,7 @@ typedef struct {
 	uint16_t Count;
 } TCS_DATA_T;
 
-TCS_DATA_T TCS_Data={FSM_IDLE, 0, 0, 0};
+volatile TCS_DATA_T TCS_Data={FSM_IDLE, 0, 0, 0};
 
 void Delay(volatile unsigned int time_del) {
 	volatile int n;
@@ -81,7 +81,6 @@ void Init_Debug_Signals(void) {
 	PORTB->PCR[DBG_6] |= PORT_PCR_MUX(1);          
 	PORTB->PCR[DBG_7] &= ~PORT_PCR_MUX_MASK;          
 	PORTB->PCR[DBG_7] |= PORT_PCR_MUX(1);          
-
 	
 	// Set ports to outputs
 	PTB->PDDR |= MASK(DBG_1) | MASK(DBG_2) | MASK(DBG_3) | MASK(DBG_4) | MASK(DBG_5) | MASK(DBG_6) | MASK(DBG_7);
@@ -105,81 +104,46 @@ void Control_RGB_LEDs(int r_on, int g_on, int b_on) {
 		PTD->PSOR = MASK(BLUE_LED_POS);
 }
 
-//////////////////////
-// Use hardware timer
-void Init_PIT(unsigned channel, unsigned period) {
-	// Enable clock to PIT module
-	SIM->SCGC6 |= SIM_SCGC6_PIT_MASK;
-	// Disable module
-	PIT->MCR |= PIT_MCR_MDIS_MASK;
-	// Enable module, freeze timers in debug mode
-	PIT->MCR &= ~PIT_MCR_MDIS_MASK;
-	PIT->MCR |= PIT_MCR_FRZ_MASK;
-	// Disable timer, clear control register
-	PIT->CHANNEL[channel].TCTRL = 0;
-	// Initialize PIT0 to count down from argument 
-	// Time delay = (period + 1)/24 MHz 
-	PIT->CHANNEL[channel].LDVAL = PIT_LDVAL_TSV(period);
-	// No chaining
-	PIT->CHANNEL[channel].TCTRL &= PIT_TCTRL_CHN_MASK;
-	// Do not generate interrupts
-	PIT->CHANNEL[channel].TCTRL &= ~PIT_TCTRL_TIE_MASK;
-	// Reset interrupt/overflow flag
-	PIT->CHANNEL[channel].TFLG = PIT_TFLG_TIF_MASK;
-}
-
-void Start_PIT(unsigned channel) {
-	// Enable counter
-	PIT->CHANNEL[channel].TCTRL |= PIT_TCTRL_TEN_MASK;
-}
-
-void Stop_PIT(unsigned channel) {
-	// Disable counter
-	PIT->CHANNEL[channel].TCTRL &= ~PIT_TCTRL_TEN_MASK;
-}
-
-unsigned PIT_Expired(unsigned channel) {
-	return PIT->CHANNEL[channel].TFLG & PIT_TFLG_TIF_MASK; // Is 1 on underflow (time expired)
-}
 
 // Task code
 // Non-FSM version
-//int Task_Color_Sequence(unsigned int delay_duration) {
-//	int flash_num;
-//	int response_delay=0;
-//	
-//	PTB->PSOR = MASK(DBG_1);
-//	Control_RGB_LEDs(1, 0, 0); // Red
-//	Delay(delay_duration);
-//	if (SWITCH_PRESSED(SW1_POS)) { 
-//		Control_RGB_LEDs(1, 0, 1); // Magenta
-//		Delay(delay_duration);
-//		response_delay = 0;
-//		do {
-//			Control_RGB_LEDs(0, 0, 1); // Blue
-//			Delay(delay_duration/2);
-//			Control_RGB_LEDs(1, 0, 0); // Red
-//			Delay(delay_duration/2);
-//			response_delay++;
-//		} while (!SWITCH_PRESSED(SW2_POS));
-//	} else {
-//		Control_RGB_LEDs(1, 1, 0); // Yellow
-//		Delay(delay_duration);
-//	}
-//	for (flash_num = 0; flash_num < 3; flash_num++) {
-//		Control_RGB_LEDs(0, 1, 0); // Green
-//		Delay(delay_duration);
-//		Control_RGB_LEDs(0, 0, 0); // Off
-//		Delay(delay_duration);
-//	}
-//	PTB->PCOR = MASK(DBG_1);
-//	return response_delay;
-//}
+
+int Task_Color_Sequence(unsigned int delay_duration) {
+	int flash_num;
+	int response_delay=0;
+	
+	PTB->PSOR = MASK(DBG_1);
+	Control_RGB_LEDs(1, 0, 0); // Red
+	Delay(delay_duration);
+	if (SWITCH_PRESSED(SW1_POS)) { 
+		Control_RGB_LEDs(1, 0, 1); // Magenta
+		Delay(delay_duration);
+		response_delay = 0;
+		do {
+			Control_RGB_LEDs(0, 0, 1); // Blue
+			Delay(delay_duration/2);
+			Control_RGB_LEDs(1, 0, 0); // Red
+			Delay(delay_duration/2);
+			response_delay++;
+		} while (!SWITCH_PRESSED(SW2_POS));
+	} else {
+		Control_RGB_LEDs(1, 1, 0); // Yellow
+		Delay(delay_duration);
+	}
+	for (flash_num = 0; flash_num < 3; flash_num++) {
+		Control_RGB_LEDs(0, 1, 0); // Green
+		Delay(delay_duration);
+		Control_RGB_LEDs(0, 0, 0); // Off
+		Delay(delay_duration);
+	}
+	PTB->PCOR = MASK(DBG_1);
+	return response_delay;
+}
 
 
 void Task_Color_Sequence_FSM(void) {
 	int flash_num;
-	static unsigned int delay_duration=100;
+	static unsigned int delay_duration=2000; // or 100
 	static enum {S1,S2,S3} next_state = S1;
 	static int response_delay=0;
 
@@ -270,8 +234,12 @@ void Task_Another_FSM(void) {
 
 void Basic_Scheduler(void) {
 	while (1) {
+#if 1
+		Task_Color_Sequence(2000);
+#else
 		Task_Color_Sequence_FSM();
 		Task_Another_FSM();
+#endif
 	}
 }
 
