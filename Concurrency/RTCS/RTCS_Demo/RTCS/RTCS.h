@@ -6,6 +6,8 @@
 
 #define RTCS_NUM_TASKS (10)
 
+#define DEBUG_RTCS_POS 	0		// Port B bit 0, J10 pin 2
+
 extern volatile uint32_t RTCS_Num_Ticks;
 
 typedef struct {

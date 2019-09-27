@@ -234,7 +234,7 @@ void Task_Another_FSM(void) {
 
 void Basic_Scheduler(void) {
 	while (1) {
-#if 1
+#if 0
 		Task_Color_Sequence(2000);
 #else
 		Task_Color_Sequence_FSM();

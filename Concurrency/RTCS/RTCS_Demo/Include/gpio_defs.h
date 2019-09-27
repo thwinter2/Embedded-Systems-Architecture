@@ -4,7 +4,6 @@
 #define MASK(x) (1UL << (x))
 
 // Debug outputs on Port B
-#define DEBUG_RTCS_POS 	0		// J10 pin 2
 #define DEBUG_RED_POS 	1 	// J10 pin 4
 #define DEBUG_GREEN_POS 2 	// J10 pin 6
 #define DEBUG_BLUE_POS 	3		// J10 pin 8
