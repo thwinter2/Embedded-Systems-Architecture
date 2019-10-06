@@ -6,7 +6,7 @@
 int lock_detect = 0;
 int i2c_lock	= 0;
 
-#define DISABLE_LOCK_DETECT
+// #define ENABLE_LOCK_DETECT // don't include lock detect, simplifying FSM creation
 
 volatile I2C_MESSAGE_T g_I2C_Msg = {0, NONE, IDLE, 0,0};
 
@@ -76,7 +76,7 @@ void i2c_wait( void )
 	while( ( ( I2C0->S & I2C_S_IICIF_MASK ) == 0 ) & ( lock_detect < LOCK_DETECT_THRESHOLD )) {
 		lock_detect++;
 	}
-#ifdef DISABLE_LOCK_DETECT
+#ifdef ENABLE_LOCK_DETECT
 	if( lock_detect >= LOCK_DETECT_THRESHOLD )
 		i2c_busy( );
 #endif
