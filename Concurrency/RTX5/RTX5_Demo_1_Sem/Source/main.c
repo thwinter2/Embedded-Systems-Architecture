@@ -35,7 +35,7 @@ int main (void) {
 	
   osKernelInitialize();                 	// Initialize CMSIS-RTOS
 
-#if 0
+#if 1
 	RGB_sem = osSemaphoreNew(1, 0, NULL);		// Create binary semaphore
 #else 
 	RGB_sem = osSemaphoreNew(5, 0, NULL);		// Create counting semaphore
