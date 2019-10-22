@@ -31,5 +31,4 @@ int main (void) {
   osKernelInitialize();                 // Initialize CMSIS-RTOS
   tid_Blinky = osThreadNew(Thread_Blinky, NULL, NULL);    // Create blinky thread
   osKernelStart();                      // Start thread execution
-  for (;;) {}
 }
