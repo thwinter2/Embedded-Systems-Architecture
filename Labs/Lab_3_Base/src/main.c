@@ -16,6 +16,7 @@
 
 volatile int g_enable_control=1;
 volatile int g_set_current=0;
+volatile int g_flash_current_mA = FLASH_CURRENT_MA;
 
 volatile int measured_current;
 volatile int16_t g_duty_cycle=0;  // global to give debugger access
@@ -233,15 +234,18 @@ void Update_Set_Current(void) {
 
 	if (g_enable_flash){
 		delay--;
+#if ENABLE_PRE_FLASH
 		if (delay==1) {
 			FPTB->PSOR = MASK(DBG_LED_ON);
-			Set_DAC_mA(FLASH_CURRENT_MA);
-			g_set_current = FLASH_CURRENT_MA;
-		} else if (delay==0) {
+			Set_DAC_mA(g_flash_current_mA/4);
+			g_set_current = g_flash_current_mA/4;
+			} else 
+#endif
+		if (delay==0) {
 			delay=FLASH_PERIOD;
 			FPTB->PSOR = MASK(DBG_LED_ON);
-			Set_DAC_mA(FLASH_CURRENT_MA/4);
-			g_set_current = FLASH_CURRENT_MA/4;
+			Set_DAC_mA(g_flash_current_mA);
+			g_set_current = g_flash_current_mA;
 		} else {
 			FPTB->PCOR = MASK(DBG_LED_ON);
 			Set_DAC_mA(0);
@@ -270,11 +274,8 @@ int main (void) {
 	Delay(100);
 	Control_RGB_LEDs(0,0,1);	
 	
-	while (1)
-		;
-	
 	// Configure flash timer
-	Init_PIT(423456);
+	Init_PIT(123456);
 	Start_PIT();	
 	
 	while (1) {

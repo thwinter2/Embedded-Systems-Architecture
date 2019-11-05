@@ -116,6 +116,7 @@ void Stop_PIT(void) {
 }
 
 void PIT_IRQHandler() {
+	FPTB->PSOR = MASK(DBG_IRQ_PIT);
 	// check to see which channel triggered interrupt 
 	if (PIT->CHANNEL[0].TFLG & PIT_TFLG_TIF_MASK) {
 		// clear status flag for timer channel 0
@@ -126,6 +127,7 @@ void PIT_IRQHandler() {
 		// clear status flag for timer channel 1
 		PIT->CHANNEL[1].TFLG &= PIT_TFLG_TIF_MASK;
 	} 
+	FPTB->PCOR = MASK(DBG_IRQ_PIT);
 }
 
 // *******************************ARM University Program Copyright © ARM Ltd 2013*************************************   
