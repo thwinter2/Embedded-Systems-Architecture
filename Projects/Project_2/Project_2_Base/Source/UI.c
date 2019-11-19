@@ -12,8 +12,8 @@
 #include "FX.h"
 #include "timers.h"
 
-// Green = read/write
-// Orange = read-only
+// Green fields = read/write
+// Orange fields = read-only
 UI_FIELD_T Fields[] = {
 	{"Duty Cycle  ", "ct", "", (volatile int *)&g_duty_cycle, NULL, {0,7}, 
 	&green, &black, 1, 0, 0, 0,Control_DutyCycle_Handler},
@@ -34,7 +34,8 @@ UI_FIELD_T Fields[] = {
 };
 
 UI_SLIDER_T Slider = {
-	0, {0,290}, {239,319}, {119,290}, {119,319}, &white, &dark_gray, &light_gray
+	0, {0,LCD_HEIGHT-UI_SLIDER_HEIGHT}, {UI_SLIDER_WIDTH-1,LCD_HEIGHT-1}, 
+	{119,LCD_HEIGHT-UI_SLIDER_HEIGHT}, {119,LCD_HEIGHT-1}, &white, &dark_gray, &light_gray
 };
 
 int UI_sel_field = -1;

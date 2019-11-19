@@ -58,34 +58,12 @@ void Create_OS_Objects(void) {
 }
 
 void Thread_Read_TS(void * arg) {
-	PT_T p, pp;
-	COLOR_T c;
-	
-	pp.X = 0;
-	pp.Y = 0;
-	
-	c.R = 255;
-	c.G = 200;
-	c.B = 200;
+	PT_T p;
 	
 	while (1) {
 		DEBUG_START(DBG_TREADTS);
 		if (LCD_TS_Read(&p)) { 
 			UI_Process_Touch(&p);
-//			// Drawing example
-//			if (p.Y < 100) { 
-//				// Draw on screen
-//				if ((pp.X == 0) && (pp.Y == 0)) {
-//					pp = p;
-//				}
-//				osMutexAcquire(LCD_mutex, osWaitForever);
-//				LCD_Draw_Line(&p, &pp, &c);
-//				osMutexRelease(LCD_mutex);
-//				pp = p;
-//			} 
-		} else {
-			pp.X = 0;
-			pp.Y = 0;
 		}
 		DEBUG_STOP(DBG_TREADTS);
 		osDelay(THREAD_READ_TS_PERIOD_MS);

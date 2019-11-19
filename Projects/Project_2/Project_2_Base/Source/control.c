@@ -27,8 +27,6 @@ volatile int g_set_current=0; // Default starting LED current
 volatile int g_measured_current;
 volatile int error;
 
-// volatile CTL_MODE_E control_mode=DEF_CONTROL_MODE;
-
 int32_t pGain_8 = PGAIN_8; // proportional gain numerator scaled by 2^8
 
 SPid plantPID = {0, // dState
@@ -251,36 +249,36 @@ void Init_Buck_HBLED(void) {
 
 // Handler functions (callbacks)
 // Default handlers
-void Control_OnOff_Handler (UI_FIELD_T * ctl, int v) {
-	if (ctl->Val != NULL) {
+void Control_OnOff_Handler (UI_FIELD_T * fld, int v) {
+	if (fld->Val != NULL) {
 		if (v > 0) {
-			*ctl->Val = 1;
+			*fld->Val = 1;
 		} else {
-			*ctl->Val = 0;
+			*fld->Val = 0;
 		}
 	}
 }
 
-void Control_IntNonNegative_Handler (UI_FIELD_T * ctl, int v) {
+void Control_IntNonNegative_Handler (UI_FIELD_T * fld, int v) {
 	int n;
-	if (ctl->Val != NULL) {
-		n = *ctl->Val + v/16;
+	if (fld->Val != NULL) {
+		n = *fld->Val + v/16;
 		if (n < 0) {
 			n = 0;
 		}
-		*ctl->Val = n;
+		*fld->Val = n;
 	}
 }
 
-void Control_DutyCycle_Handler(UI_FIELD_T * ctl, int v) {
+void Control_DutyCycle_Handler(UI_FIELD_T * fld, int v) {
 	int dc;
-	if (ctl->Val != NULL) {
+	if (fld->Val != NULL) {
 		dc = g_duty_cycle + v/16;
 		if (dc < 0)
 			dc = 0;
 		else if (dc > LIM_DUTY_CYCLE)
 			dc = LIM_DUTY_CYCLE;
-		*(ctl->Val) = dc;
+		*(fld->Val) = dc;
 		PWM_Set_Value(TPM0, PWM_HBLED_CHANNEL, g_duty_cycle);
 	}
 }

@@ -12,7 +12,6 @@
 #define USE_LCD_MUTEX (1)
 
 // Custom stack sizes for larger threads
-#define READ_ACCEL_STK_SZ 768 // 512
 
 void Init_Debug_Signals(void);
 
@@ -29,3 +28,4 @@ extern osThreadId_t t_Read_TS, t_Read_Accelerometer, t_Sound_Manager, t_US, t_Re
 extern osMutexId_t LCD_mutex;
 
 #endif // THREADS_H
+

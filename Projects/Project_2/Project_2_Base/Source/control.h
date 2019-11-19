@@ -72,9 +72,6 @@
 #define P_GAIN_FX (70000)	
 #define I_GAIN_FX (40) 
 #define D_GAIN_FX (40000)
-//#define P_GAIN_FX (2900)	
-//#define I_GAIN_FX (140000) 
-//#define D_GAIN_FX (100000)
 
 // Data type definitions
 typedef struct {
@@ -102,9 +99,9 @@ void Init_Buck_HBLED(void);
 void Update_Set_Current(void);
 
 // Handler functions (callbacks)
-void Control_OnOff_Handler (UI_FIELD_T * ctl, int v);
-void Control_IntNonNegative_Handler (UI_FIELD_T * ctl, int v);
-void Control_DutyCycle_Handler(UI_FIELD_T * ctl, int v);
+void Control_OnOff_Handler (UI_FIELD_T * fld, int v);
+void Control_IntNonNegative_Handler (UI_FIELD_T * fld, int v);
+void Control_DutyCycle_Handler(UI_FIELD_T * fld, int v);
 
 // Shared global variables
 extern volatile int g_set_current; // Default starting LED current

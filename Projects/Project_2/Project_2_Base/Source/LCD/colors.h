@@ -1,6 +1,11 @@
 #ifndef COLORS_H
 #define COLORS_H
-#include "LCD.h"
+#include <stdint.h>
+
+typedef struct {
+	uint8_t R, G, B; // note: using 5-6-5 color mode for LCD. 
+									 // Values are left aligned here
+} COLOR_T;
 
 extern COLOR_T black, 
 	white,

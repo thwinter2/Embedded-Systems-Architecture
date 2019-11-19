@@ -3,20 +3,12 @@
 
 #include <stdint.h>
 #include "misc.h"
+#include "colors.h"
 
 typedef struct {
 	uint32_t X, Y;
 } PT_T;
 
-typedef struct {
-	uint8_t R, G, B; // note: using 5-6-5 color mode for LCD. 
-									 // Values are left aligned here
-} COLOR_T;
-
-extern COLOR_T black, white, orange, dark_red, 
-	light_gray, dark_gray;
-
-/*** ***/
 
 // Ported functions for common LCD API
 
@@ -28,15 +20,18 @@ extern COLOR_T black, white, orange, dark_red,
 */
  void LCD_Plot_Pixel(PT_T * pos, COLOR_T * color);
 
-/** Refresh LCD from local MCU frame buffer
+/** Refresh LCD from local MCU frame buffer. 
+Not used for ST7789, since no local frame buffer is needed.
 */
  void LCD_Refresh(void);
 
 /** Fill entire LCD with given color
 */
  void LCD_Fill_Buffer(COLOR_T * color);
+
 /** Fill specified rectangle with given color
 */
+ void LCD_Fill_Rectangle(PT_T * p1, PT_T * p2, COLOR_T * color); // Not ported to T6963.c yet
 
 /** Plot given byte of packed data at given position
 */
@@ -47,14 +42,11 @@ extern COLOR_T black, white, orange, dark_red,
 void LCD_Plot_Packed_Pixels_Unaligned(uint8_t fill_byte, uint8_t r_shift, PT_T * pos);
 
 
-/*** ***/
-// Need to port these
- void LCD_Fill_Rectangle(PT_T * p1, PT_T * p2, COLOR_T * color);
- uint32_t LCD_Start_Rectangle(PT_T * p1, PT_T * p2);
- void LCD_Write_Rectangle_Pixel(COLOR_T * color, unsigned int count);
 
-/*** ***/
- 
+ uint32_t LCD_Start_Rectangle(PT_T * p1, PT_T * p2);						// Not ported to T6963.c yet
+
+ void LCD_Write_Rectangle_Pixel(COLOR_T * color, unsigned int count);// Not ported to T6963.c yet
+
  void LCD_Set_BL(uint8_t on);
  void LCD_Set_Backlight_Brightness(uint32_t brightness_percent);
  void LCD_Text_Set_Colors(COLOR_T * foreground, COLOR_T * background);
@@ -78,6 +70,6 @@ void LCD_Plot_Packed_Pixels_Unaligned(uint8_t fill_byte, uint8_t r_shift, PT_T *
  void LCD_TS_Test(void);
  void LCD_TS_Calibrate(void);
 
- extern uint8_t G_LCD_char_width, G_LCD_char_height;
+ extern uint8_t G_LCD_char_width, G_LCD_char_height; // Screen dimensions in characters
 
 #endif
