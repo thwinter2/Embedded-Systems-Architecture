@@ -72,17 +72,17 @@ void Thread_Read_TS(void * arg) {
 		DEBUG_START(DBG_TREADTS);
 		if (LCD_TS_Read(&p)) { 
 			UI_Process_Touch(&p);
-			// Drawing example
-			if (p.Y < 100) { 
-				// Draw on screen
-				if ((pp.X == 0) && (pp.Y == 0)) {
-					pp = p;
-				}
-				osMutexAcquire(LCD_mutex, osWaitForever);
-				LCD_Draw_Line(&p, &pp, &c);
-				osMutexRelease(LCD_mutex);
-				pp = p;
-			} 
+//			// Drawing example
+//			if (p.Y < 100) { 
+//				// Draw on screen
+//				if ((pp.X == 0) && (pp.Y == 0)) {
+//					pp = p;
+//				}
+//				osMutexAcquire(LCD_mutex, osWaitForever);
+//				LCD_Draw_Line(&p, &pp, &c);
+//				osMutexRelease(LCD_mutex);
+//				pp = p;
+//			} 
 		} else {
 			pp.X = 0;
 			pp.Y = 0;

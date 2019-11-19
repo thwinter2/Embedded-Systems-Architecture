@@ -12,27 +12,29 @@
 #include "FX.h"
 #include "timers.h"
 
+// Green = read/write
+// Orange = read-only
 UI_FIELD_T Fields[] = {
-	{"Duty Cycle  ", "ct", "", (volatile int *)&g_duty_cycle, NULL, {0,4}, 
+	{"Duty Cycle  ", "ct", "", (volatile int *)&g_duty_cycle, NULL, {0,7}, 
 	&green, &black, 1, 0, 0, 0,Control_DutyCycle_Handler},
-	{"Enable Ctlr ", "", "", (volatile int *)&g_enable_control, NULL, {0,5}, 
+	{"Enable Ctlr ", "", "", (volatile int *)&g_enable_control, NULL, {0,8}, 
 	&green, &black, 1, 0, 0, 0, Control_OnOff_Handler},	
-	{"Enable Flash", "", "", (volatile int *)&g_enable_flash, NULL, {0,6}, 
+	{"Enable Flash", "", "", (volatile int *)&g_enable_flash, NULL, {0,9}, 
 	&green, &black, 1, 0, 0, 0, Control_OnOff_Handler},	
-	{"T_flash_prd ", "ms", "", (volatile int *)&g_flash_period, NULL, {0,7}, 
+	{"T_flash_prd ", "ms", "", (volatile int *)&g_flash_period, NULL, {0,10}, 
 	&green, &black, 1, 0, 0, 0, Control_IntNonNegative_Handler},		
-	{"T_flash_on  ", "ms", "", (volatile int *)&g_flash_duration, NULL, {0,8}, 
+	{"T_flash_on  ", "ms", "", (volatile int *)&g_flash_duration, NULL, {0,11}, 
 	&green, &black,  1, 0, 0, 0, Control_IntNonNegative_Handler},
-	{"I_set       ", "mA", "", (volatile int *)&g_set_current, NULL, {0,9}, 
+	{"I_set       ", "mA", "", (volatile int *)&g_set_current, NULL, {0,12}, 
 	&green, &black, 1, 0, 0, 0, Control_IntNonNegative_Handler},
-	{"I_set_peak  ", "mA", "", (volatile int *)&g_peak_set_current, NULL, {0,10}, 
+	{"I_set_peak  ", "mA", "", (volatile int *)&g_peak_set_current, NULL, {0,13}, 
 	&green, &black, 1, 0, 0, 0, Control_IntNonNegative_Handler},
-	{"I_measured  ", "mA", "", (volatile int *)&g_measured_current, NULL, {0,12}, 
+	{"I_measured  ", "mA", "", (volatile int *)&g_measured_current, NULL, {0,14}, 
 	&orange, &black, 1, 0, 1, 1, NULL},
 };
 
 UI_SLIDER_T Slider = {
-	0, {0,260}, {239,319}, {119,240}, {119,319}, &white, &dark_gray, &light_gray
+	0, {0,290}, {239,319}, {119,290}, {119,319}, &white, &dark_gray, &light_gray
 };
 
 int UI_sel_field = -1;
